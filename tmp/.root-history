@@ -1,0 +1,33 @@
+ls
+./init 
+ewarn
+ee
+vim init 
+exit
+ewarn
+ls
+./init 
+ewarn
+exit
+./init 
+l
+ls
+umount dev
+ls
+l
+lsls
+ls
+lsof +D dev/
+umount dev
+ls
+cryptsetup --version
+busybox --version
+lvm --version
+lvm -v
+man lvm
+lvm
+ls
+vim
+js
+ed
+ls

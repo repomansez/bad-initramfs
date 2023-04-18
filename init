@@ -1,0 +1,51 @@
+#!/bin/busybox sh
+
+# Initial RAM Filesystem for Full Disk Encryption with detached LUKS header.
+# If you plan on using this init script, be sure to modify paths accordingly.
+# e.g /dev/sdb1, /mnt/head/dick.img etc.
+#
+# https://notabug.org/sabactani						    
+
+. /functions
+
+# Mount the /proc, /dev and /sys filesystems.
+# Sleep used to wait for kernel to load modules and for /dev to be populated.
+mount -t devtmpfs devtmpfs /dev
+mount -t proc none /proc
+mount -t sysfs none /sys
+
+# Function that checks if the flash drive containing the LUKS header has been detected.
+# Avoids the use of sleep.
+chkHead
+# Mount flash drive contaning boot partition and LUKS header.
+mkdir -p /mnt/head
+cryptsetup luksOpen $(findfs UUID="e53438bf-c76e-4202-a626-d899543905fd") piroquinha 
+ebegin "Mounting flash drive"
+mount /dev/mapper/piroquinha /mnt/head && eend || mount UUID="e53438bf-c76e-4202-a626-d899543905fd" /mnt/head || rescue_shell # old encryption-less header device
+
+# Unlock LUKS partition. 
+einfo "Unlock Hard Drive:" && cryptsetup $cryptOpts /dev/nvme0n1 enema || findRoot || rescue_shell
+# Scan for LVM vgs and lvs.
+ebegin "Scanning for logical volumes"
+/sbin/lvm vgscan --mknodes || rescue_shell
+/sbin/lvm lvchange -a ly lvmcum || rescue_shell
+/sbin/lvm vgscan --mknodes || rescue_shell
+
+# Mount the root filesystem.
+ebegin "Mounting the root filesystem"
+mount -o ro /dev/mapper/lvmcum-root /mnt/root && eend || rescue_shell
+/sbin/cryptsetup luksOpen $cryptOpts2 /dev/sdb urine || findData || rescue_shell
+/sbin/cryptsetup luksOpen $cryptOpts3 /dev/sdc feces || findFeces || rescue_shell
+ebegin "Scanning for other logical volumes"
+/sbin/lvm vgscan --mknodes || rescue_shell
+/sbin/lvm lvchange -a ly lvmtoba || rescue_shell
+/sbin/lvm lvchange -a ly lvmfeces   
+/sbin/lvm vgscan --mknodes && eend || rescue_shell
+# Clean up.
+umount /dev
+umount /proc
+umount /sys
+umount /mnt/head
+
+# Boot the real thing.
+exec switch_root /mnt/root /sbin/init

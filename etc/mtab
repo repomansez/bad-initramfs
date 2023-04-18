@@ -1,0 +1,4 @@
+devtmpfs /dev devtmpfs 0 0 0
+/dev/sdc2 /mnt/head ext2 0 0 0
+none /proc proc  0 0
+none /sys sysfs  0 0
