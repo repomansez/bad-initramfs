@@ -48,4 +48,4 @@ umount /sys
 umount /mnt/head
 
 # Boot the real thing.
-exec switch_root /mnt/root /sbin/init
+exec switch_root /mnt/root /lib/systemd/systemd
